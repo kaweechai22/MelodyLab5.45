@@ -31,8 +31,8 @@ function drawResonance(){const ctx=ctxs.resonance,c=canvases.resonance;if(!ctx)r
 function avg(arr,k){return arr.reduce((s,x)=>s+Number(x[k]||0),0)/arr.length;}
 function loop(){if(!frozen){analyser.getByteTimeDomainData(timeData);analyser.getByteFrequencyData(freqData);latest.rms=rms(timeData);const d=dbFromRms(latest.rms);latest.dbFast=d;latest.dbSlow=latest.dbSlow?latest.dbSlow*.9+d*.1:d;latest.db=$("dbMode").value==="slow"?latest.dbSlow:latest.dbFast;latest.fft=estimateFFT(freqData,audioCtx.sampleRate);latest.auto=estimateAuto(timeData,audioCtx.sampleRate);latest.zcr=zcr(timeData,audioCtx.sampleRate);latest.main=mainFreq();latest.period=latest.main?1000/latest.main:0;updateStats(latest.db);const len=Number($("historyLength").value||220);history.push({t:Date.now(),fft:latest.fft||0,auto:latest.auto||0,main:latest.main||0});ampHistory.push(latest.db||0);while(history.length>len)history.shift();while(ampHistory.length>len)ampHistory.shift();const peaks=topPeaks(freqData,audioCtx.sampleRate,3);renderPeaks(peaks);updateReadouts();updateCalibrationUI();drawScope();drawSpectrum(peaks);drawAuto();drawHistory();drawAmp();drawSpectrogram();}rafId=requestAnimationFrame(loop);}
 function renderPeaks(peaks){const ol=$("topPeaks");ol.innerHTML="";for(let i=0;i<3;i++){const li=document.createElement("li");li.textContent=peaks[i]?`${peaks[i].hz.toFixed(1)} Hz`:"-- Hz";ol.appendChild(li);}}
-async function startMic(){try{audioCtx=new (window.AudioContext||window.webkitAudioContext)();micStream=await navigator.mediaDevices.getUserMedia({audio:true});analyser=audioCtx.createAnalyser();analyser.fftSize=Number($("fftSize").value||2048);analyser.smoothingTimeConstant=Number($("smoothing").value||.65);micSource=audioCtx.createMediaStreamSource(micStream);micSource.connect(analyser);timeData=new Uint8Array(analyser.fftSize);freqData=new Uint8Array(analyser.frequencyBinCount);$("startMic").disabled=true;$("stopMic").disabled=false;$("captureBtn").disabled=false;$("autoLogBtn").disabled=false;if($("captureCalBtn"))$("captureCalBtn").disabled=false;$("micDot").classList.add("on");$("micStatus").textContent="เปิดไมโครโฟนแล้ว — กำลังวิเคราะห์เสียง";loop();}catch(e){$("micStatus").textContent="ไม่สามารถเปิดไมโครโฟนได้: "+e.message;}}
-function stopMic(){if(rafId)cancelAnimationFrame(rafId);if(autoLogId)toggleAutoLog();if(micStream)micStream.getTracks().forEach(t=>t.stop());if(audioCtx)audioCtx.close();audioCtx=null;micStream=null;$("startMic").disabled=false;$("stopMic").disabled=true;$("captureBtn").disabled=true;$("autoLogBtn").disabled=true;if($("captureCalBtn"))$("captureCalBtn").disabled=true;$("micDot").classList.remove("on");$("micStatus").textContent="หยุดไมโครโฟนแล้ว";}
+async function startMic(){try{audioCtx=new (window.AudioContext||window.webkitAudioContext)();micStream=await navigator.mediaDevices.getUserMedia({audio:true});analyser=audioCtx.createAnalyser();analyser.fftSize=Number($("fftSize").value||2048);analyser.smoothingTimeConstant=Number($("smoothing").value||.65);micSource=audioCtx.createMediaStreamSource(micStream);micSource.connect(analyser);timeData=new Uint8Array(analyser.fftSize);freqData=new Uint8Array(analyser.frequencyBinCount);$("startMic").disabled=true;$("stopMic").disabled=false;$("captureBtn").disabled=false;$("autoLogBtn").disabled=false;if($("captureCalBtn"))$("captureCalBtn").disabled=false;$("micDot").classList.add("on");$("micStatus").classList.add("hidden"); $("micStatus").textContent="";loop();}catch(e){$("micStatus").classList.remove("hidden"); $("micStatus").textContent="ไม่สามารถเปิดไมโครโฟนได้: "+e.message;}}
+function stopMic(){if(rafId)cancelAnimationFrame(rafId);if(autoLogId)toggleAutoLog();if(micStream)micStream.getTracks().forEach(t=>t.stop());if(audioCtx)audioCtx.close();audioCtx=null;micStream=null;$("startMic").disabled=false;$("stopMic").disabled=true;$("captureBtn").disabled=true;$("autoLogBtn").disabled=true;if($("captureCalBtn"))$("captureCalBtn").disabled=true;$("micDot").classList.remove("on");$("micStatus").classList.add("hidden"); $("micStatus").textContent="";}
 function capture(){const peaks=freqData&&audioCtx?topPeaks(freqData,audioCtx.sampleRate,3):[];logs.push({time:new Date().toLocaleString("th-TH"),run:$("runInput").value||"Run 1",preset:$("preset").value,label:$("labelInput").value||"ไม่ระบุ",main:latest.main?latest.main.toFixed(1):"",fft:latest.fft?latest.fft.toFixed(1):"",auto:latest.auto?latest.auto.toFixed(1):"",period:latest.period?latest.period.toFixed(2):"",rms:latest.rms?latest.rms.toFixed(4):"",db:latest.db?latest.db.toFixed(1):"",zcr:latest.zcr?latest.zcr.toFixed(1):"",top1:peaks[0]?peaks[0].hz.toFixed(1):"",top2:peaks[1]?peaks[1].hz.toFixed(1):"",top3:peaks[2]?peaks[2].hz.toFixed(1):"",note:`min=${$("minFreq").value} max=${$("maxFreq").value} offset=${$("dbOffset").value}`});renderLog();}
 function renderLog(){const head=$("logHead"),body=$("logBody");head.innerHTML="";exportCols.forEach(c=>{const th=document.createElement("th");th.textContent=colNames[c];head.appendChild(th);});body.innerHTML="";logs.forEach(r=>{const tr=document.createElement("tr");exportCols.forEach(c=>{const td=document.createElement("td");td.textContent=r[c]??"";tr.appendChild(td);});body.appendChild(tr);});}
 function downloadCsv(){const csv=[exportCols.map(c=>colNames[c]),...logs.map(r=>exportCols.map(c=>r[c]??""))].map(row=>row.map(v=>`"${String(v).replaceAll('"','""')}"`).join(",")).join("\n");const blob=new Blob(["\ufeff"+csv],{type:"text/csv;charset=utf-8"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="PhySound_AcousticsPro_Data.csv";a.click();URL.revokeObjectURL(url);}
@@ -142,12 +142,12 @@ function fillBrowserInfo(){
 
 function toggleAutoLog(){if(autoLogId){clearInterval(autoLogId);autoLogId=null;$("autoLogBtn").textContent="เริ่ม Auto Log";}else{autoLogId=setInterval(capture,Math.max(.2,Number($("logInterval").value||1))*1000);$("autoLogBtn").textContent="หยุด Auto Log";}}
 function applyPreset(){const p=$("preset").value;const map={general:[50,5000,.65],tone:[100,2000,.55],voice:[80,4000,.75],beat:[100,1200,.65],resonance:[50,3000,.60],doppler:[100,3000,.55],environment:[20,10000,.85]};const m=map[p]||map.general;$("minFreq").value=m[0];$("maxFreq").value=m[1];$("smoothing").value=m[2];}
-function applyMode(){document.querySelectorAll(".teacherSetting").forEach(e=>e.classList.toggle("hidden",$("userMode").value==="student"));}
+function applyMode(){const modeEl=$("userMode"); if(!modeEl) return; document.querySelectorAll(".teacherSetting").forEach(e=>e.classList.toggle("hidden",modeEl.value==="student"));}
 function renderColumnToggles(){const box=$("columnToggles");box.innerHTML="";Object.keys(colNames).forEach(k=>{const b=document.createElement("button");b.className="secondary active";b.textContent=colNames[k];b.onclick=()=>{if(exportCols.includes(k)){exportCols=exportCols.filter(x=>x!==k);b.classList.remove("active");}else{exportCols.push(k);b.classList.add("active");}renderLog();};box.appendChild(b);});}
-function saveSettings(){const keys=["preset","userMode","minFreq","maxFreq","dbOffset","dbMode","fftSize","smoothing","logInterval","historyLength"];localStorage.setItem("physound-settings",JSON.stringify(Object.fromEntries(keys.map(k=>[k,$(k).value]))));alert("บันทึก Settings แล้ว");}
+function saveSettings(){const keys=["preset","userMode","minFreq","maxFreq","dbOffset","dbMode","fftSize","smoothing","logInterval","historyLength"];localStorage.setItem("physound-settings",JSON.stringify(Object.fromEntries(keys.filter(k=>$(k)).map(k=>[k,$(k).value]))));alert("บันทึก Settings แล้ว");}
 function loadSettings(){try{const s=JSON.parse(localStorage.getItem("physound-settings")||"{}");Object.entries(s).forEach(([k,v])=>{if($(k))$(k).value=v;});}catch(e){}applyMode();}
 function resetSettings(){localStorage.removeItem("physound-settings");location.reload();}
-function copyConfig(){const keys=["preset","minFreq","maxFreq","dbOffset","dbMode","fftSize","smoothing"];const q=new URLSearchParams(Object.fromEntries(keys.map(k=>[k,$(k).value]))).toString();navigator.clipboard?.writeText(location.origin+location.pathname+"#"+q);alert("คัดลอก Config Link แล้ว");}
+function copyConfig(){const keys=["preset","minFreq","maxFreq","dbOffset","dbMode","fftSize","smoothing"];const q=new URLSearchParams(Object.fromEntries(keys.filter(k=>$(k)).map(k=>[k,$(k).value]))).toString();navigator.clipboard?.writeText(location.origin+location.pathname+"#"+q);alert("คัดลอก Config Link แล้ว");}
 function readConfig(){if(location.hash.length>1){const q=new URLSearchParams(location.hash.slice(1));q.forEach((v,k)=>{if($(k))$(k).value=v;});}}
 function saveGraphs(){["scope","spectrum","spectrogram","history"].forEach(n=>{const c=canvases[n];if(!c)return;const a=document.createElement("a");a.href=c.toDataURL("image/png");a.download=`PhySound_${n}.png`;a.click();});}
 let toneCtx,toneOsc,toneGain,noiseCtx,noiseSrc,noiseGain,beatCtx,beatOsc1,beatOsc2,beatGain;
@@ -183,6 +183,129 @@ function drawWaveLine(ctx, points, color="#22d3ee", width=3){
   points.forEach((p,i)=>{ if(i===0) ctx.moveTo(p[0],p[1]); else ctx.lineTo(p[0],p[1]); });
   ctx.stroke();
 }
+
+function drawVizAxis(ctx,c,mode){
+  ctx.save();
+  ctx.fillStyle="#cfe9ff";
+  ctx.strokeStyle="rgba(207,233,255,.72)";
+  ctx.lineWidth=1.4;
+  ctx.font="16px Sarabun, system-ui, sans-serif";
+
+  function axis(x1,y1,x2,y2,label){
+    ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();
+    const ang=Math.atan2(y2-y1,x2-x1);
+    const ah=9;
+    ctx.beginPath();
+    ctx.moveTo(x2,y2);
+    ctx.lineTo(x2-ah*Math.cos(ang-Math.PI/6), y2-ah*Math.sin(ang-Math.PI/6));
+    ctx.moveTo(x2,y2);
+    ctx.lineTo(x2-ah*Math.cos(ang+Math.PI/6), y2-ah*Math.sin(ang+Math.PI/6));
+    ctx.stroke();
+    ctx.fillText(label,x2+8,y2+5);
+  }
+  function yLabel(text,x,y){
+    ctx.save();
+    ctx.translate(x,y);
+    ctx.rotate(-Math.PI/2);
+    ctx.fillText(text,0,0);
+    ctx.restore();
+  }
+
+  if(mode==="longitudinal"){
+    axis(70,c.height-52,c.width-80,c.height-52,"position x (m)");
+    yLabel("particle displacement s (relative)",28,c.height/2+90);
+  }else if(mode==="pressure"){
+    axis(70,c.height-52,c.width-80,c.height-52,"position x (m)");
+    yLabel("pressure variation ΔP (relative)",28,c.height/2+100);
+  }else if(mode==="displacementPressure"){
+    axis(70,245,c.width-80,245,"position x (m)");
+    yLabel("displacement s (relative)",28,165);
+    axis(70,c.height-42,c.width-80,c.height-42,"position x (m)");
+    yLabel("pressure ΔP (relative)",28,380);
+  }else if(mode==="transverseCompare"){
+    axis(70,235,c.width-80,235,"position x (m)");
+    yLabel("longitudinal displacement (relative)",28,170);
+    axis(70,c.height-42,c.width-80,c.height-42,"position x (m)");
+    yLabel("transverse displacement y (relative)",28,380);
+  }else if(mode==="superposition" || mode==="beatsViz"){
+    axis(70,c.height-42,c.width-80,c.height-42,"time t (s)");
+    yLabel("relative amplitude",28,c.height/2+80);
+  }else if(mode==="standingAir"){
+    axis(90,c.height-52,c.width-90,c.height-52,"position along air column x (m)");
+    yLabel("displacement relative amplitude",28,c.height/2+95);
+  }else if(mode==="resonanceViz"){
+    axis(80,c.height-58,c.width-80,c.height-58,"frequency f (Hz)");
+    yLabel("response relative amplitude",28,c.height/2+90);
+  }else if(mode==="harmonicsViz"){
+    axis(100,c.height-58,c.width-80,c.height-58,"harmonic number n");
+    yLabel("relative relative amplitude",28,c.height/2+90);
+  }else if(mode==="dopplerViz"){
+    axis(70,c.height-52,c.width-80,c.height-52,"position x (m)");
+    yLabel("wavefront spacing / pressure pattern",28,c.height/2+100);
+  }
+  ctx.restore();
+}
+function drawVizScale(ctx,c,mode){
+  ctx.save();
+  ctx.fillStyle="rgba(207,233,255,.82)";
+  ctx.font="14px Sarabun, system-ui, sans-serif";
+  if(["longitudinal","pressure","standingAir","dopplerViz"].includes(mode)){
+    ctx.fillText("0",72,c.height-30);
+    ctx.fillText("x",c.width-72,c.height-30);
+  }
+  if(["superposition","beatsViz"].includes(mode)){
+    ctx.fillText("0 s",72,c.height-22);
+    ctx.fillText("t",c.width-72,c.height-22);
+  }
+  if(mode==="resonanceViz"){
+    ctx.fillText("100 Hz",80,c.height-28);
+    ctx.fillText("1000 Hz",c.width-150,c.height-28);
+  }
+  if(mode==="harmonicsViz"){
+    ctx.fillText("1f",128,c.height-28);
+    ctx.fillText("7f",c.width-150,c.height-28);
+  }
+  ctx.restore();
+}
+
+
+function drawTrackedParticle(ctx,x,y,label="observation point"){
+  ctx.save();
+  ctx.fillStyle="#ff4d6d";
+  ctx.strokeStyle="#ffffff";
+  ctx.lineWidth=2;
+  ctx.beginPath(); ctx.arc(x,y,8,0,Math.PI*2); ctx.fill(); ctx.stroke();
+  ctx.strokeStyle="rgba(255,77,109,.8)";
+  ctx.beginPath(); ctx.moveTo(x+12,y-12); ctx.lineTo(x+54,y-32); ctx.stroke();
+  ctx.fillStyle="#ffd6de";
+  ctx.font="15px Sarabun, system-ui, sans-serif";
+  ctx.fillText(label,x+58,y-34);
+  ctx.restore();
+}
+function drawTrackedVertical(ctx,x,y1,y2){
+  ctx.save();
+  ctx.strokeStyle="rgba(255,77,109,.55)";
+  ctx.setLineDash([6,6]);
+  ctx.lineWidth=1.5;
+  ctx.beginPath(); ctx.moveTo(x,y1); ctx.lineTo(x,y2); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.restore();
+}
+function drawVizLegend(ctx,c){
+  ctx.save();
+  ctx.fillStyle="rgba(5,18,40,.78)";
+  ctx.strokeStyle="rgba(255,255,255,.16)";
+  ctx.lineWidth=1;
+  const x=c.width-270,y=16,w=235,h=36;
+  ctx.beginPath(); ctx.roundRect(x,y,w,h,10); ctx.fill(); ctx.stroke();
+  ctx.fillStyle="#ff4d6d";
+  ctx.beginPath(); ctx.arc(x+20,y+18,6,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle="#e8eefc";
+  ctx.font="14px Sarabun, system-ui, sans-serif";
+  ctx.fillText("highlighted observation point",x+34,y+23);
+  ctx.restore();
+}
+
 function drawVisualizer(){
   const c=$("visualizerCanvas"); if(!c) return;
   const ctx=c.getContext("2d");
@@ -194,8 +317,12 @@ function drawVisualizer(){
 
   ctx.fillStyle="#cfe9ff"; ctx.font="20px Sarabun";
   ctx.fillText(modeLabel(mode),24,34);
+  drawVizAxis(ctx,c,mode);
+  drawVizScale(ctx,c,mode);
+  drawVizLegend(ctx,c);
 
   if(mode==="longitudinal" || mode==="pressure"){
+    const trackedIndex = 30;
     const rows = mode==="longitudinal" ? [mid] : [mid-50, mid+50];
     for(const yBase of rows){
       for(let i=0;i<70;i++){
@@ -203,11 +330,24 @@ function drawVisualizer(){
         const disp=Math.sin((i/69)*Math.PI*8-phase)*p.A*22;
         const x=x0+disp;
         const density=(Math.sin((i/69)*Math.PI*8-phase)+1)/2;
-        ctx.fillStyle=mode==="pressure"?`rgba(34,211,238,${0.25+0.65*density})`:"#22d3ee";
-        ctx.beginPath(); ctx.arc(x,yBase,mode==="pressure"?5+7*density:6,0,Math.PI*2); ctx.fill();
+        const isTracked = i===trackedIndex;
+        ctx.fillStyle=isTracked ? "#ff4d6d" : (mode==="pressure"?`rgba(34,211,238,${0.25+0.65*density})`:"#22d3ee");
+        ctx.beginPath(); ctx.arc(x,yBase,isTracked?8:(mode==="pressure"?5+7*density:6),0,Math.PI*2); ctx.fill();
+        if(isTracked){
+          ctx.strokeStyle="#ffffff"; ctx.lineWidth=2;
+          ctx.beginPath(); ctx.arc(x,yBase,(mode==="pressure"?5+7*density:6)+2,0,Math.PI*2); ctx.stroke();
+        }
         if(mode==="longitudinal"){
           ctx.strokeStyle="rgba(255,255,255,.14)";
+          ctx.lineWidth=1;
           ctx.beginPath(); ctx.moveTo(x0,yBase-35); ctx.lineTo(x0,yBase+35); ctx.stroke();
+          if(isTracked){
+            drawTrackedVertical(ctx,x0,yBase-42,yBase+42);
+            drawTrackedParticle(ctx,x,yBase,"tracked particle");
+          }
+        }
+        if(mode==="pressure" && isTracked && yBase===mid-50){
+          drawTrackedParticle(ctx,x,yBase,"tracked particle");
         }
       }
     }
@@ -227,23 +367,37 @@ function drawVisualizer(){
       pts1.push([x,150-Math.sin(u)*p.A*55]);
       pts2.push([x,360-Math.cos(u)*p.A*55]);
     }
+    const trackedIdx = Math.floor(pts1.length*0.42);
     ctx.fillStyle="#9fb3c8"; ctx.fillText("Displacement",70,85); ctx.fillText("Pressure",70,295);
     drawWaveLine(ctx,pts1,"#22d3ee",3); drawWaveLine(ctx,pts2,"#fbbf24",3);
+    drawTrackedVertical(ctx,pts1[trackedIdx][0],105,415);
+    drawTrackedParticle(ctx,pts1[trackedIdx][0],pts1[trackedIdx][1],"observation point");
+    drawTrackedParticle(ctx,pts2[trackedIdx][0],pts2[trackedIdx][1],"same x-position");
   }
 
   if(mode==="transverseCompare"){
+    const trackedIndex = 22;
     for(let i=0;i<60;i++){
       const x0=70+i*(W-140)/59;
       const disp=Math.sin((i/59)*Math.PI*8-phase)*p.A*20;
-      ctx.fillStyle="#22d3ee"; ctx.beginPath(); ctx.arc(x0+disp,160,5,0,Math.PI*2); ctx.fill();
+      const isTracked = i===trackedIndex;
+      ctx.fillStyle=isTracked ? "#ff4d6d" : "#22d3ee";
+      ctx.beginPath(); ctx.arc(x0+disp,160,isTracked?7:5,0,Math.PI*2); ctx.fill();
+      if(isTracked){
+        ctx.strokeStyle="#ffffff"; ctx.lineWidth=2;
+        ctx.beginPath(); ctx.arc(x0+disp,160,9,0,Math.PI*2); ctx.stroke();
+        drawTrackedParticle(ctx,x0+disp,160,"tracked particle");
+      }
     }
     const pts=[];
     for(let x=60;x<W-60;x++){
       const y=365-Math.sin((x-60)/(W-120)*Math.PI*8-phase)*p.A*60;
       pts.push([x,y]);
     }
+    const trackedCurveIdx = Math.floor(pts.length*0.42);
     ctx.fillStyle="#9fb3c8"; ctx.fillText("Longitudinal representation",70,95); ctx.fillText("Transverse representation",70,295);
     drawWaveLine(ctx,pts,"#fbbf24",3);
+    drawTrackedParticle(ctx,pts[trackedCurveIdx][0],pts[trackedCurveIdx][1],"same wave position");
   }
 
   if(mode==="superposition" || mode==="beatsViz"){
@@ -255,13 +409,19 @@ function drawVisualizer(){
       const y2=Math.sin(xx*Math.PI*8*(f2/p.f)-phase*1.07)*p.A*45;
       ptsA.push([x,135-y1]); ptsB.push([x,250-y2]); ptsSum.push([x,385-(y1+y2)*0.72]);
     }
+    const trackedIdx = Math.floor(ptsA.length*0.36);
     drawWaveLine(ctx,ptsA,"#22d3ee",2); drawWaveLine(ctx,ptsB,"#a855f7",2); drawWaveLine(ctx,ptsSum,"#fbbf24",4);
     ctx.fillStyle="#9fb3c8"; ctx.fillText("Wave A",70,80); ctx.fillText("Wave B",70,195); ctx.fillText("Result",70,330);
+    drawTrackedVertical(ctx,ptsA[trackedIdx][0],85,405);
+    drawTrackedParticle(ctx,ptsA[trackedIdx][0],ptsA[trackedIdx][1],"wave A point");
+    drawTrackedParticle(ctx,ptsB[trackedIdx][0],ptsB[trackedIdx][1],"wave B point");
+    drawTrackedParticle(ctx,ptsSum[trackedIdx][0],ptsSum[trackedIdx][1],"result point");
   }
 
   if(mode==="standingAir"){
     const closed=p.sub==="closed";
     const tubeX=90,tubeY=110,tubeW=W-180,tubeH=230;
+    const trackedIndex = 10;
     ctx.strokeStyle="#cfe9ff"; ctx.lineWidth=5;
     ctx.strokeRect(tubeX,tubeY,tubeW,tubeH);
     if(closed){ctx.fillStyle="#cfe9ff";ctx.fillRect(tubeX-8,tubeY-5,12,tubeH+10);}
@@ -277,7 +437,15 @@ function drawVisualizer(){
       const x=tubeX+20+i*(tubeW-40)/17;
       const xx=(x-tubeX)/tubeW;
       const shape=closed?Math.sin(xx*Math.PI/2):Math.sin(xx*Math.PI);
-      ctx.fillStyle="#fbbf24";ctx.beginPath();ctx.arc(x,tubeY+tubeH/2-Math.sin(phase)*shape*p.A*70,5,0,Math.PI*2);ctx.fill();
+      const y = tubeY+tubeH/2-Math.sin(phase)*shape*p.A*70;
+      const isTracked = i===trackedIndex;
+      ctx.fillStyle=isTracked ? "#ff4d6d" : "#fbbf24";
+      ctx.beginPath();ctx.arc(x,y,isTracked?7:5,0,Math.PI*2);ctx.fill();
+      if(isTracked){
+        ctx.strokeStyle="#ffffff"; ctx.lineWidth=2;
+        ctx.beginPath(); ctx.arc(x,y,9,0,Math.PI*2); ctx.stroke();
+        drawTrackedParticle(ctx,x,y,"tracked air particle");
+      }
     }
   }
 
@@ -291,6 +459,8 @@ function drawVisualizer(){
     }
     drawWaveLine(ctx,pts,"#34d399",4);
     ctx.strokeStyle="#fbbf24";ctx.lineWidth=2;const rx=80+(f0-100)/900*(W-160);ctx.beginPath();ctx.moveTo(rx,80);ctx.lineTo(rx,H-70);ctx.stroke();
+    const peakY = H-80-1*p.A*320;
+    drawTrackedParticle(ctx,rx,peakY,"resonance peak");
   }
 
   if(mode==="harmonicsViz"){
@@ -299,20 +469,27 @@ function drawVisualizer(){
     const baseX=140, baseY=H-90, gap=120;
     bars.forEach((a,i)=>{
       const h=a*330*p.A;
-      ctx.fillStyle=i===0?"#22d3ee":"#a855f7";
+      ctx.fillStyle=i===0?"#ff4d6d":"#a855f7";
       ctx.fillRect(baseX+i*gap,baseY-h,55,h);
+      if(i===0){
+        ctx.strokeStyle="#ffffff"; ctx.lineWidth=2;
+        ctx.strokeRect(baseX+i*gap-2,baseY-h-2,59,h+4);
+        drawTrackedParticle(ctx,baseX+i*gap+27,baseY-h,"fundamental");
+      }
       ctx.fillStyle="#cfe9ff";ctx.font="16px Sarabun";ctx.fillText(`${i+1}f`,baseX+i*gap+10,baseY+24);
     });
   }
 
   if(mode==="dopplerViz"){
     const sx=360+Math.sin(phase*0.18)*220, sy=mid;
+    const ox = W-160, oy = mid-40;
     ctx.fillStyle="#fbbf24";ctx.beginPath();ctx.arc(sx,sy,14,0,Math.PI*2);ctx.fill();
     ctx.strokeStyle="rgba(34,211,238,.65)";ctx.lineWidth=3;
     for(let r=40;r<520;r+=42){
       ctx.beginPath();ctx.arc(sx-r*0.18,sy,r,0,Math.PI*2);ctx.stroke();
     }
     ctx.fillStyle="#cfe9ff";ctx.font="18px Sarabun";ctx.fillText("source",sx+20,sy-18);
+    drawTrackedParticle(ctx,ox,oy,"observer point");
   }
 
   if(vizState.running) vizState.t += 1;
@@ -356,5 +533,5 @@ function initVisualizer(){
   drawVisualizer();
 }
 
-function init(){fillBrowserInfo();initVisualizer();Object.entries(ctxs).forEach(([n,ctx])=>drawGrid(ctx,canvases[n]));drawBeat();drawResonance();renderColumnToggles();readConfig();loadSettings();renderLog();$("startMic").onclick=startMic;$("stopMic").onclick=stopMic;$("captureBtn").onclick=capture;$("downloadBtn").onclick=downloadCsv;$("downloadExcelBtn").onclick=downloadExcel;if($("captureCalBtn"))$("captureCalBtn").onclick=captureCalibration;if($("downloadCalBtn"))$("downloadCalBtn").onclick=downloadCalibrationCsv;if($("applyDbCalBtn"))$("applyDbCalBtn").onclick=applyDbCalibration;if($("playCalTone"))$("playCalTone").onclick=()=>{$("toneFreq").value=440;playTone();};if($("stopCalTone"))$("stopCalTone").onclick=stopTone;$("clearBtn").onclick=()=>{logs=[];renderLog();};$("autoLogBtn").onclick=toggleAutoLog;$("preset").onchange=()=>{applyPreset();};$("userMode").onchange=applyMode;$("freezeBtn").onclick=()=>{frozen=!frozen;$("freezeBtn").textContent=frozen?"Unfreeze Graph":"Freeze Graph";};$("resetPeakBtn").onclick=()=>{peakHold=[];};$("saveGraphsBtn").onclick=saveGraphs;$("saveSettingsBtn").onclick=saveSettings;$("resetSettingsBtn").onclick=resetSettings;$("configLinkBtn").onclick=copyConfig;$("playTone").onclick=playTone;$("stopTone").onclick=stopTone;$("playNoise").onclick=playNoise;$("stopNoise").onclick=stopNoise;$("playBeat").onclick=playBeat;$("stopBeat").onclick=stopBeat;["beatF1","beatF2","beatVol"].forEach(id=>$(id).addEventListener("input",()=>{if(beatOsc1)beatOsc1.frequency.value=Number($("beatF1").value||440);if(beatOsc2)beatOsc2.frequency.value=Number($("beatF2").value||444);if(beatGain)beatGain.gain.value=Number($("beatVol").value||.06);drawBeat();}));["resV","resL","resMode"].forEach(id=>$(id).addEventListener("input",drawResonance));["toneFreq","toneVol","toneType"].forEach(id=>$(id).addEventListener("input",()=>{if(toneOsc)toneOsc.frequency.value=Number($("toneFreq").value||440);if(toneGain)toneGain.gain.value=Number($("toneVol").value||.06);if(toneOsc)toneOsc.type=$("toneType").value;}));$("noiseVol").addEventListener("input",()=>{if(noiseGain)noiseGain.gain.value=Number($("noiseVol").value||.03);});if("serviceWorker"in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));}}
+function init(){fillBrowserInfo();initVisualizer();Object.entries(ctxs).forEach(([n,ctx])=>drawGrid(ctx,canvases[n]));drawBeat();drawResonance();renderColumnToggles();readConfig();loadSettings();renderLog();$("startMic").onclick=startMic;$("stopMic").onclick=stopMic;$("captureBtn").onclick=capture;$("downloadBtn").onclick=downloadCsv;$("downloadExcelBtn").onclick=downloadExcel;if($("captureCalBtn"))$("captureCalBtn").onclick=captureCalibration;if($("downloadCalBtn"))$("downloadCalBtn").onclick=downloadCalibrationCsv;if($("applyDbCalBtn"))$("applyDbCalBtn").onclick=applyDbCalibration;if($("playCalTone"))$("playCalTone").onclick=()=>{$("toneFreq").value=440;playTone();};if($("stopCalTone"))$("stopCalTone").onclick=stopTone;$("clearBtn").onclick=()=>{logs=[];renderLog();};$("autoLogBtn").onclick=toggleAutoLog;$("preset").onchange=()=>{applyPreset();};if($("userMode")) $("userMode").onchange=applyMode;$("freezeBtn").onclick=()=>{frozen=!frozen;$("freezeBtn").textContent=frozen?"Unfreeze Graph":"Freeze Graph";};$("resetPeakBtn").onclick=()=>{peakHold=[];};$("saveGraphsBtn").onclick=saveGraphs;$("saveSettingsBtn").onclick=saveSettings;$("resetSettingsBtn").onclick=resetSettings;$("configLinkBtn").onclick=copyConfig;$("playTone").onclick=playTone;$("stopTone").onclick=stopTone;$("playNoise").onclick=playNoise;$("stopNoise").onclick=stopNoise;$("playBeat").onclick=playBeat;$("stopBeat").onclick=stopBeat;["beatF1","beatF2","beatVol"].forEach(id=>$(id).addEventListener("input",()=>{if(beatOsc1)beatOsc1.frequency.value=Number($("beatF1").value||440);if(beatOsc2)beatOsc2.frequency.value=Number($("beatF2").value||444);if(beatGain)beatGain.gain.value=Number($("beatVol").value||.06);drawBeat();}));["resV","resL","resMode"].forEach(id=>$(id).addEventListener("input",drawResonance));["toneFreq","toneVol","toneType"].forEach(id=>$(id).addEventListener("input",()=>{if(toneOsc)toneOsc.frequency.value=Number($("toneFreq").value||440);if(toneGain)toneGain.gain.value=Number($("toneVol").value||.06);if(toneOsc)toneOsc.type=$("toneType").value;}));$("noiseVol").addEventListener("input",()=>{if(noiseGain)noiseGain.gain.value=Number($("noiseVol").value||.03);});if("serviceWorker"in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));}}
 document.addEventListener("DOMContentLoaded",init);

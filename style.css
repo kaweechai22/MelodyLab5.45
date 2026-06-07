@@ -11,3 +11,11 @@
 .vizReadout b{font-size:1rem}
 @media(max-width:1100px){.visualizerGrid .mainViz,.visualizerGrid .controlViz{grid-column:1/-1}.vizReadout{grid-template-columns:1fr 1fr}}
 @media(max-width:660px){.vizReadout{grid-template-columns:1fr}}
+
+.cleanHero{
+  padding:8px 0 0;
+  min-height:0;
+}
+.cleanHero:empty{
+  display:none;
+}
