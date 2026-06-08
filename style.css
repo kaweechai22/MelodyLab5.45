@@ -1383,15 +1383,22 @@ main.wrap{
   }
 }
 
-/* v5.38 clean deploy: Longitudinal final page */
+/* v5.39: keep full Home, tune Longitudinal graph only */
 .longitudinalFocusPage .vizMediaFrame canvas{
-  min-height: 440px;
-}
-.longitudinalFocusPage .sectionLead{
-  max-width: 760px;
+  min-height: 430px;
 }
 @media (orientation: landscape) and (max-height: 620px){
   .longitudinalFocusPage .vizMediaFrame canvas{
-    min-height: 370px;
+    min-height: 360px;
+  }
+}
+
+/* v5.40: full Home preserved, Longitudinal subpage cleaned */
+.longitudinalFocusPage .vizMediaFrame canvas{
+  min-height: 430px;
+}
+@media (orientation: landscape) and (max-height: 620px){
+  .longitudinalFocusPage .vizMediaFrame canvas{
+    min-height: 360px;
   }
 }

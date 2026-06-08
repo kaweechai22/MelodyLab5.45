@@ -287,9 +287,16 @@
 - A ไม่อ้างอิงตำแหน่งปัจจุบันของอนุภาคสีแดงอีกต่อไป
 - เพิ่มเส้นกำกับตำแหน่งสุดขีดของการกระจัด
 
-## v5.38 Clean Deploy
-- Clean deployment version for GitHub Pages
-- index.html redirects to visualizer_longitudinal.html?v=538
-- visualizer_longitudinal.html is cleaned to keep only the Longitudinal Wave page
-- cache name changed to melodylab-v5-38-clean-deploy
-- Amplitude A fixed as maximum displacement, not current particle displacement
+## v5.39 Full Home + Longitudinal Fixed
+- Restore full Home and all original pages from v5.37 structure
+- Do not use the v5.38 clean one-page deploy
+- Fix only Longitudinal Wave graph
+- Amplitude A is fixed maximum displacement, not current particle displacement
+- 4 compact particle rows, no numeric x-axis labels, no lambda labels, no legend dots under x-axis
+
+## v5.40 Full Home + Clean Longitudinal
+- Home/index and all app pages preserved from v5.37/v5.39 structure
+- Only visualizer_longitudinal.html is cleaned to show one Longitudinal section
+- Longitudinal renderer forced via early return in drawVisualizer
+- Amplitude A remains fixed maximum displacement, not current red particle displacement
+- x-axis has no numbers and no lambda labels
