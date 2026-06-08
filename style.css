@@ -1382,3 +1382,16 @@ main.wrap{
     min-height: 360px;
   }
 }
+
+/* v5.38 clean deploy: Longitudinal final page */
+.longitudinalFocusPage .vizMediaFrame canvas{
+  min-height: 440px;
+}
+.longitudinalFocusPage .sectionLead{
+  max-width: 760px;
+}
+@media (orientation: landscape) and (max-height: 620px){
+  .longitudinalFocusPage .vizMediaFrame canvas{
+    min-height: 370px;
+  }
+}

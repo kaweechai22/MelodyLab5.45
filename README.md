@@ -286,3 +286,10 @@
 - แก้ความหมายของ Amplitude A ให้เป็นการกระจัดสูงสุดคงที่
 - A ไม่อ้างอิงตำแหน่งปัจจุบันของอนุภาคสีแดงอีกต่อไป
 - เพิ่มเส้นกำกับตำแหน่งสุดขีดของการกระจัด
+
+## v5.38 Clean Deploy
+- Clean deployment version for GitHub Pages
+- index.html redirects to visualizer_longitudinal.html?v=538
+- visualizer_longitudinal.html is cleaned to keep only the Longitudinal Wave page
+- cache name changed to melodylab-v5-38-clean-deploy
+- Amplitude A fixed as maximum displacement, not current particle displacement
