@@ -481,6 +481,11 @@ function drawLongitudinalFinal(ctx, c, p, w, h){
   // Particles: 4 compact rows, longitudinal spacing changes across x.
   const baseXs=[];
   for(let x=xMin;x<=xMax;x+=baseGap) baseXs.push(x);
+  // Ensure the reference particle is anchored on the exact equilibrium position.
+  // Without this, the nearest particle could be selected, causing the red point
+  // to miss the equilibrium line after reset.
+  if(!baseXs.some(v => Math.abs(v - eqX) < 0.5)) baseXs.push(eqX);
+  baseXs.sort((a,b)=>a-b);
 
   for(let row=0; row<rows; row++){
     const y = y0 + row*rowGap;
@@ -488,7 +493,7 @@ function drawLongitudinalFinal(ctx, c, p, w, h){
       const base=baseXs[i];
       const disp=currentAmpPx*Math.sin(k*(base-eqX)-phase);
       const x=base+disp;
-      const isObs = row===obsRow && Math.abs(base-obsBaseX)<baseGap/2;
+      const isObs = row===obsRow && Math.abs(base-obsBaseX) < 0.5;
       if(isObs){obsX=x; obsY=y;}
 
       const grd=ctx.createRadialGradient(x-2.5,y-2.5,1,x,y,isObs?particleRadius+2:particleRadius+2);
@@ -719,7 +724,7 @@ function drawVisualizer(){
 }
 function modeLabel(mode){
   return {
-    longitudinal:"Longitudinal Wave",
+    longitudinal:"Longitudinal Wave (คลื่นตามยาว)",
     pressure:"Pressure Variation",
     displacementPressure:"Displacement + Pressure",
     transverseCompare:"Longitudinal / Transverse",

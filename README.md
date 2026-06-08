@@ -316,3 +316,13 @@
 ## v5.43 Longitudinal Equilibrium Point
 - Moved the red reference particle to the equilibrium position in Longitudinal Wave
 - At reset/start (t=0), the red point aligns with the equilibrium line so displacement can be observed from the correct reference position
+
+## v5.44 Longitudinal Reset Fixed
+- Fixed the red reference particle so it uses an exact base position at the equilibrium line
+- On reset (t=0), the red point now aligns with the equilibrium position exactly
+- Prevented the nearest-neighbor particle from being chosen as the red reference point
+
+## v5.45 Longitudinal Thai + Physics Terms
+- Removed English sentence-style UI text on the Longitudinal page
+- Kept Thai as the main display language
+- Retained only essential English physics terms such as Longitudinal Wave, Wave propagation, Frequency, Amplitude A, Wave Speed v, and Equilibrium position

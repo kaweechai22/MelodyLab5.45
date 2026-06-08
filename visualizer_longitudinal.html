@@ -1,11 +1,11 @@
-<!DOCTYPE html><html lang="th"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>MelodyLab v5.40 - Longitudinal Wave</title><meta name="description" content="MelodyLab ห้องทดลองเสียงและเก็บข้อมูล ด้วยมือถือ"><meta name="theme-color" content="#0f172a"><link rel="manifest" href="manifest.json"><link rel="icon" type="image/png" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><link rel="stylesheet" href="style.css"><meta name="melodylab-build-version" content="v5.40-fullhome-clean-longitudinal">
+<!DOCTYPE html><html lang="th"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>MelodyLab v5.45 - คลื่นตามยาว</title><meta name="description" content="MelodyLab ห้องทดลองเสียงและเก็บข้อมูล ด้วยมือถือ"><meta name="theme-color" content="#0f172a"><link rel="manifest" href="manifest.json"><link rel="icon" type="image/png" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><link rel="stylesheet" href="style.css"><meta name="melodylab-build-version" content="v5.40-fullhome-clean-longitudinal">
 </head><body class="detailPage page-visualizer"><header><div class="wrap nav detailNav"><button class="backBtn" onclick="location.href=\'visualizer.html\'">←</button><a class="brand" href="index.html"><img src="icon-192.png" alt="MelodyLab"><span>Longitudinal Wave (คลื่นตามยาว)</span></a></div></header><main class="wrap detailMain" data-current="visualizer">
 <section class="section activeDetail visualizerSinglePage visualizerTemplatePage longitudinalFocusPage" id="visualizer" data-viz-mode="longitudinal">
   <div class="sectionHead templateHead">
     <div>
-      <div class="miniTag">Visualizer Template (แม่แบบภาพจำลอง) · Focus Mode (โหมดเน้นเฉพาะหัวข้อ)</div>
+      <div class="miniTag">แม่แบบภาพจำลอง · โหมดเน้นเฉพาะหัวข้อ</div>
       <h2>Longitudinal Wave (คลื่นตามยาว)</h2>
-      <p class="sectionLead">Main simulation for observing sound-wave motion and particle motion (ภาพจำลองหลักสำหรับสังเกตการเคลื่อนที่ของคลื่นเสียงและการเคลื่อนที่ของอนุภาค)</p>
+      <p class="sectionLead">ภาพจำลองหลักสำหรับสังเกตการเคลื่อนที่ของคลื่นเสียงและการเคลื่อนที่ของอนุภาค</p>
     </div>
   </div>
 
@@ -14,19 +14,19 @@
       <div class="vizMediaFrame">
         <div class="vizSingleModeLabel"><span>〰️</span> Longitudinal Wave (คลื่นตามยาว)</div>
         <canvas id="visualizerCanvas" width="1200" height="520"></canvas>
-        <div class="vizPlayerBar embeddedPlayerBar" aria-label="Visualizer player controls (ปุ่มควบคุมภาพจำลอง)">
+        <div class="vizPlayerBar embeddedPlayerBar" aria-label="ปุ่มควบคุมภาพจำลอง">
           <div class="playerCluster playerCenter playerCenterOnly">
-            <button id="vizPlayBtn" class="playerBtn playerPrimary playerPlay" title="Play (เล่น)" aria-label="Play (เล่น)">
+            <button id="vizPlayBtn" class="playerBtn playerPrimary playerPlay" title="เล่น" aria-label="เล่น">
               <span class="playerGlyph" aria-hidden="true">
                 <svg viewBox="0 0 24 24" role="img" focusable="false"><path d="M8 6.5v11l9-5.5-9-5.5z"/></svg>
               </span>
             </button>
-            <button id="vizPauseBtn" class="playerBtn playerPause" title="Pause (หยุด)" aria-label="Pause (หยุด)">
+            <button id="vizPauseBtn" class="playerBtn playerPause" title="หยุด" aria-label="หยุด">
               <span class="playerGlyph" aria-hidden="true">
                 <svg viewBox="0 0 24 24" role="img" focusable="false"><rect x="7" y="6" width="3.5" height="12" rx="1.2"/><rect x="13.5" y="6" width="3.5" height="12" rx="1.2"/></svg>
               </span>
             </button>
-            <button id="vizResetBtn" class="playerBtn playerReset" title="Reset (รีเซ็ต)" aria-label="Reset (รีเซ็ต)">
+            <button id="vizResetBtn" class="playerBtn playerReset" title="รีเซ็ต" aria-label="รีเซ็ต">
               <span class="playerGlyph" aria-hidden="true">
                 <svg viewBox="0 0 24 24" role="img" focusable="false"><path d="M19 12a7 7 0 1 1-2.05-4.95"/><path d="M19 5v5h-5"/></svg>
               </span>
@@ -36,26 +36,26 @@
       </div>
 
       <details class="explainDetails">
-        <summary>More explanation (คำอธิบายเพิ่มเติม)</summary>
+        <summary>คำอธิบายเพิ่มเติม</summary>
         <div class="detailsBody">
           <div class="vizConceptStrip compactExplainStrip">
-            <div class="conceptChip"><span class="chipIcon">→</span><div><b>Wave propagation (ทิศการเคลื่อนที่ของคลื่น)</b><small>Direction of wave travel (ทิศทางการเคลื่อนที่ของคลื่น)</small></div></div>
-            <div class="conceptChip"><span class="chipIcon">↔</span><div><b>Particle vibration (การสั่นของอนุภาค)</b><small>Particles move back and forth parallel to the wave (อนุภาคสั่นไป-กลับในแนวเดียวกับคลื่น)</small></div></div>
-            <div class="conceptChip"><span class="chipIcon">A</span><div><b>Amplitude A (แอมพลิจูด A)</b><small>Maximum displacement from equilibrium (ขนาดการกระจัดมากที่สุดจากตำแหน่งสมดุล)</small></div></div>
-            <div class="conceptChip accent"><span class="chipIcon dot"></span><div><b>Observation point (จุดสังเกต)</b><small>The red particle is a reference particle (อนุภาคสีแดงใช้เป็นอนุภาคอ้างอิง)</small></div></div>
+            <div class="conceptChip"><span class="chipIcon">→</span><div><b>Wave propagation (ทิศทางการเคลื่อนที่ของคลื่น)</b><small>ใช้สังเกตทิศทางการเคลื่อนที่ของคลื่น</small></div></div>
+            <div class="conceptChip"><span class="chipIcon">↔</span><div><b>Particle vibration (การสั่นของอนุภาค)</b><small>อนุภาคสั่นไป-กลับในแนวเดียวกับคลื่น</small></div></div>
+            <div class="conceptChip"><span class="chipIcon">A</span><div><b>Amplitude A (แอมพลิจูด A)</b><small>ขนาดการกระจัดมากที่สุดจากตำแหน่งสมดุล</small></div></div>
+            <div class="conceptChip accent"><span class="chipIcon dot"></span><div><b>จุดสังเกต</b><small>อนุภาคสีแดงใช้เป็นอนุภาคอ้างอิง</small></div></div>
           </div>
           <div class="templateUnderCanvas explainGrid">
             <div class="templateInsightCard">
-              <div class="insightTitle">Observable ideas (สิ่งที่สังเกตได้)</div>
+              <div class="insightTitle">สิ่งที่สังเกตได้</div>
               <ul>
-                <li>Wave arrow (ลูกศรคลื่น) → shows the direction of wave travel (แสดงทิศทางการเคลื่อนที่ของคลื่น)</li>
-                <li>Particle motion (การเคลื่อนที่ของอนุภาค) is back and forth along the same direction as the wave (ไป-กลับในแนวเดียวกับคลื่น)</li>
-                <li>Amplitude A (แอมพลิจูด A) means maximum displacement from equilibrium (หมายถึงการกระจัดสูงสุดจากตำแหน่งสมดุล)</li>
+                <li>ลูกศรคลื่นใช้แสดงทิศทางการเคลื่อนที่ของคลื่น</li>
+                <li>อนุภาคเคลื่อนที่ไป-กลับในแนวเดียวกับคลื่น</li>
+                <li>Amplitude A (แอมพลิจูด A) หมายถึงการกระจัดสูงสุดจากตำแหน่งสมดุล</li>
               </ul>
             </div>
             <div class="templateLegendCard">
-              <div class="legendRow"><span class="legendDot cyan"></span><span>Medium particles (อนุภาคของตัวกลาง)</span></div>
-              <div class="legendRow"><span class="legendDot red"></span><span>Reference particle (อนุภาคอ้างอิงสำหรับสังเกต)</span></div>
+              <div class="legendRow"><span class="legendDot cyan"></span><span>อนุภาคของตัวกลาง</span></div>
+              <div class="legendRow"><span class="legendDot red"></span><span>อนุภาคอ้างอิงสำหรับสังเกต</span></div>
               <div class="legendRow"><span class="legendMark">│</span><span>Equilibrium position (ตำแหน่งสมดุลของอนุภาคอ้างอิง)</span></div>
             </div>
           </div>
@@ -64,21 +64,21 @@
     </div>
 
     <div class="card controlViz templateControlViz longitudinalControlViz">
-      <div class="panelTitleStack"><h3>Parameters (พารามิเตอร์)</h3><p class="panelSubtext">Adjust values and observe the simulation (ปรับค่าแล้วสังเกตการเปลี่ยนแปลงของภาพจำลอง)</p></div>
+      <div class="panelTitleStack"><h3>พารามิเตอร์</h3><p class="panelSubtext">ปรับค่าแล้วสังเกตการเปลี่ยนแปลงของภาพจำลอง</p></div>
       <div class="field richField"><label>Frequency f (ความถี่ f) (Hz) <span id="vizFreqLabel" class="valueBadge">440 Hz</span></label><input id="vizFreq" type="range" min="100" max="1000" step="10" value="440"></div>
       <div class="field richField"><label>Amplitude A (แอมพลิจูด A) <span id="vizAmpLabel" class="valueBadge">0.70</span></label><input id="vizAmp" type="range" min="0.1" max="1.0" step="0.05" value="0.70"></div>
       <div class="field richField"><label>Wave Speed v (อัตราเร็วคลื่น v) (m/s) <span id="vizSpeedLabel" class="valueBadge">343 m/s</span></label><input id="vizSpeed" type="range" min="250" max="400" step="1" value="343"></div>
-      <div class="field richField"><label>Phase / Time Speed (ความเร็วเฟส / เวลา) <span id="vizTimeLabel" class="valueBadge">1.0×</span></label><input id="vizTimeSpeed" type="range" min="0.1" max="3.0" step="0.1" value="1.0"></div>
+      <div class="field richField"><label>อัตราเวลา <span id="vizTimeLabel" class="valueBadge">1.0×</span></label><input id="vizTimeSpeed" type="range" min="0.1" max="3.0" step="0.1" value="1.0"></div>
     </div>
   </div>
 
   <div class="card localExportCard templateExportCard" data-export-name="Wave_Visualizer">
-    <div class="panelTitleStack"><h3>Data Export (ส่งออกข้อมูล)</h3><p class="panelSubtext">Save parameters and snapshots from this page (บันทึกค่าพารามิเตอร์และภาพจำลองจากหน้านี้)</p></div>
+    <div class="panelTitleStack"><h3>ส่งออกข้อมูล</h3><p class="panelSubtext">บันทึกค่าพารามิเตอร์และภาพจำลองจากหน้านี้</p></div>
     <div class="actions">
-      <button class="secondary localCaptureBtn">Save current values (บันทึกค่าปัจจุบัน)</button>
-      <button class="secondary localDownloadBtn">Download CSV (ดาวน์โหลด CSV)</button>
-      <button id="vizExportBtn" class="secondary localPngBtn">Save PNG (บันทึกภาพ PNG)</button>
-      <button class="secondary localClearBtn">Clear this page data (ล้างข้อมูลหน้านี้)</button>
+      <button class="secondary localCaptureBtn">บันทึกค่าปัจจุบัน</button>
+      <button class="secondary localDownloadBtn">ดาวน์โหลด CSV</button>
+      <button id="vizExportBtn" class="secondary localPngBtn">บันทึกภาพ PNG</button>
+      <button class="secondary localClearBtn">ล้างข้อมูลหน้านี้</button>
     </div>
     <div class="tableWrap localLogWrap">
       <table>
