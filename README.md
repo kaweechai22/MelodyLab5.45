@@ -124,3 +124,63 @@
 - เปลี่ยนชื่อแอปเป็น MelodyLab
 - เพิ่ม tagline: ห้องทดลองเสียงและเก็บข้อมูล ด้วยมือถือ
 - ปรับ title, meta description และ manifest ให้ตรงกับชื่อใหม่
+
+
+## v5.14 Orientation Consistent
+
+- ปรับหน้าแรกมือถือให้แนวตั้ง/แนวนอนใช้ layout เดียวกันมากขึ้น
+- ยกเลิกกติกาที่ซ่อน note/description ตามความสูงจอ เพราะทำให้แสดงผลไม่ตรงกัน
+- เพิ่มการ redraw หลังหมุนจอ เพื่อให้ canvas/visualizer แสดงผลสม่ำเสมอขึ้น
+- ตั้ง manifest orientation เป็น any
+
+
+## v5.15 Clean Home Text
+
+- ลบ footer ข้อความเก่าออกจากทุกหน้า
+- ลบแถบข้อความ workflow ในหน้าแรก
+
+
+## v5.16 Home 1 Column
+
+- ปรับหน้า Home จากการ์ดหลายคอลัมน์เป็น 1 คอลัมน์เรียงลงมา
+- เน้นให้อ่านง่ายและกดง่ายบนมือถือ
+
+
+## v5.17 Visualizer Subpages
+
+- ปรับหน้า Wave Visualizer ให้เป็นรายการหัวข้อย่อยแบบหน้า Home
+- กดหัวข้อย่อยแล้วเปิดหน้าใหม่เฉพาะภาพจำลองหัวข้อนั้น
+- แต่ละหน้าแสดงเฉพาะเนื้อหาของหัวข้อนั้น ไม่แสดงหัวข้อย่อยอื่นปน
+
+
+## v5.18 Visualizer Video Controls
+
+- ย้ายปุ่ม เล่น / หยุด / รีเซ็ต / บันทึกภาพ PNG เข้าไปอยู่ในกรอบของแต่ละหัวข้อย่อย Visualizer
+- จัดรูปแบบปุ่มเป็นแถบควบคุมแบบปุ่มเล่นวิดีโอ
+
+
+## v5.19 Visualizer Player Bar
+
+- ปรับปุ่มควบคุม Visualizer ให้เป็นแถบ player มากขึ้น
+- จัดรูปแบบเป็น media control bar พร้อมปุ่ม play ใหญ่ตรงกลาง
+- ปุ่ม reset/pause เป็นปุ่มวงกลม และปุ่ม PNG เป็น utility button แยกด้านขวา
+
+
+## v5.19.2 Final Player Styling
+
+- ปรับ player bar ของ Visualizer ให้เหมือน media player มากขึ้น
+- จัดปุ่มใน bar ให้มี play button เด่นตรงกลาง และ progress-like track ด้านล่าง
+
+
+## v5.20 Visualizer Icon-only Player
+
+- ปรับปุ่มควบคุม Visualizer ให้เป็นไอคอนล้วน ไม่มีข้อความ
+- คงรูปแบบแถบ player bar ไว้ แต่ลดความรกของ UI
+
+
+## v5.21 Visualizer Portrait-Landscape Optimized
+
+- ปรับหน้า Visualizer ให้เหมาะทั้งแนวตั้งและแนวนอนมากขึ้น
+- แนวตั้ง: main visualizer อยู่บน player bar อยู่ใต้กราฟ และพารามิเตอร์จัด 2 คอลัมน์
+- แนวนอน: main visualizer อยู่ซ้าย พารามิเตอร์อยู่ขวา ขยายพื้นที่ภาพจำลอง
+- เพิ่มการ resize canvas ตาม orientation และ redraw หลังหมุนจอ

@@ -158,7 +158,7 @@ function stopNoise(){if(noiseCtx)noiseCtx.close();noiseCtx=noiseSrc=noiseGain=nu
 function playBeat(){stopBeat();beatCtx=new (window.AudioContext||window.webkitAudioContext)();beatOsc1=beatCtx.createOscillator();beatOsc2=beatCtx.createOscillator();beatGain=beatCtx.createGain();beatOsc1.frequency.value=Number($("beatF1").value||440);beatOsc2.frequency.value=Number($("beatF2").value||444);beatGain.gain.value=Number($("beatVol").value||.06);beatOsc1.connect(beatGain);beatOsc2.connect(beatGain);beatGain.connect(beatCtx.destination);beatOsc1.start();beatOsc2.start();drawBeat();}
 function stopBeat(){if(beatCtx)beatCtx.close();beatCtx=beatOsc1=beatOsc2=beatGain=null;}
 
-let vizState = {mode:"longitudinal", running:true, t:0, raf:null};
+let vizState = {mode:(window.__melodyLabVizMode||"longitudinal"), running:true, t:0, raf:null};
 function getVizParams(){
   const f=Number($("vizFreq")?.value||440);
   const A=Number($("vizAmp")?.value||0.7);
@@ -511,6 +511,9 @@ function modeLabel(mode){
 }
 function initVisualizer(){
   if(!$("visualizerCanvas")) return;
+  const activeVizSection=document.querySelector(".visualizerSinglePage[data-viz-mode]");
+  if(activeVizSection?.dataset?.vizMode){ vizState.mode=activeVizSection.dataset.vizMode; }
+  resizeVisualizerCanvas();
   document.querySelectorAll("[data-viz]").forEach(btn=>{
     btn.onclick=()=>{
       document.querySelectorAll("[data-viz]").forEach(b=>b.classList.remove("active"));
@@ -653,3 +656,47 @@ function initLocalExportCards(){
   renderLocalExport();
 }
 
+
+
+/* v5.14: redraw after orientation change to keep display consistent */
+function refreshAfterOrientationChange(){
+  setTimeout(()=>{
+    if(typeof resizeVisualizerCanvas === "function") resizeVisualizerCanvas();
+    if(typeof drawVisualizer === "function") drawVisualizer();
+    if(typeof drawBeat === "function") drawBeat();
+    if(typeof drawResonance === "function") drawResonance();
+    document.querySelectorAll("canvas").forEach(c=>{
+      c.style.width = "100%";
+    });
+  }, 250);
+}
+window.addEventListener("orientationchange", refreshAfterOrientationChange);
+window.addEventListener("resize", refreshAfterOrientationChange);
+
+
+
+/* v5.21 resize visualizer canvas for portrait/landscape */
+function resizeVisualizerCanvas(){
+  const canvas = $("visualizerCanvas");
+  if(!canvas) return;
+
+  const container = canvas.parentElement;
+  if(!container) return;
+
+  const rect = container.getBoundingClientRect();
+  let cssW = Math.max(280, Math.floor(rect.width - 4));
+  const isLandscape = window.matchMedia("(orientation: landscape)").matches;
+
+  let cssH = isLandscape ? Math.round(cssW * 0.42) : Math.round(cssW * 0.54);
+  cssH = Math.max(isLandscape ? 180 : 220, Math.min(cssH, isLandscape ? 235 : 320));
+
+  const dpr = Math.max(1, window.devicePixelRatio || 1);
+
+  canvas.style.width = cssW + "px";
+  canvas.style.height = cssH + "px";
+  canvas.width = Math.floor(cssW * dpr);
+  canvas.height = Math.floor(cssH * dpr);
+}
+
+
+window.addEventListener("load", ()=>{ if(typeof resizeVisualizerCanvas === "function") resizeVisualizerCanvas(); });

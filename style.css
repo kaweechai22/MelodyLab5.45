@@ -262,20 +262,12 @@ main.wrap{
   }
 }
 
-@media(max-height:670px) and (max-width:760px){
-  .homeOnly .topicByTopicNote{
-    display:none;
-  }
-  .homeOnly .menuItem{
+.homeOnly .menuItem{
     min-height:69px;
   }
 }
 
-@media(max-height:600px) and (max-width:760px){
-  .homeOnly .menuItem{
-    min-height:62px;
-  }
-  .homeOnly .menuItem p{
+.homeOnly .menuItem p{
     display:none;
   }
 }
@@ -288,4 +280,732 @@ main.wrap{
 .topicByTopicNote span{
   opacity:.9;
   font-weight:600;
+}
+
+
+/* v5.14 orientation-consistent mobile layout */
+/* ใช้ layout เดียวกันทั้งมือถือแนวตั้งและแนวนอน ลดปัญหาค่าหรือข้อมูลที่แสดงไม่ตรงกัน */
+@media (hover:none) and (pointer:coarse), (max-width:900px){
+  .homeOnly .homeMenu{
+    height:auto !important;
+    min-height:calc(100dvh - 58px);
+    overflow:visible !important;
+    padding-top:6px;
+    padding-bottom:10px;
+  }
+
+  .homeOnly .topicByTopicNote{
+    display:block !important;
+    margin:0 0 6px;
+    padding:6px 8px;
+    font-size:.70rem;
+    line-height:1.25;
+    border-radius:10px;
+  }
+
+  .homeOnly .menuGrid{
+    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+    gap:7px !important;
+  }
+
+  .homeOnly .menuItem{
+    min-height:74px !important;
+    padding:7px 8px !important;
+    border-radius:12px !important;
+  }
+
+  .homeOnly .menuItem .icon{
+    font-size:1.25rem !important;
+    margin-bottom:2px !important;
+  }
+
+  .homeOnly .menuItem h3{
+    font-size:.78rem !important;
+    line-height:1.12 !important;
+    margin:0 0 2px !important;
+  }
+
+  .homeOnly .menuItem p{
+    display:-webkit-box !important;
+    font-size:.62rem !important;
+    line-height:1.12 !important;
+    -webkit-line-clamp:2 !important;
+    -webkit-box-orient:vertical !important;
+    overflow:hidden !important;
+  }
+
+  .readouts,
+  .formGrid,
+  .vizReadout{
+    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+  }
+}
+
+/* มือถือแนวนอน: ใช้สัดส่วนเดียวกับแนวตั้ง แต่ลดความสูงการ์ดเล็กน้อยโดยไม่ซ่อนข้อมูลสำคัญ */
+@media (orientation: landscape) and (hover:none) and (pointer:coarse){
+  .homeOnly header .nav{
+    padding-top:6px;
+    padding-bottom:6px;
+  }
+
+  .homeOnly .brand img{
+    width:32px;
+    height:32px;
+  }
+
+  .homeOnly .brand span{
+    font-size:.92rem;
+  }
+
+  .homeOnly .topicByTopicNote{
+    font-size:.66rem;
+    padding:5px 8px;
+    margin-bottom:5px;
+  }
+
+  .homeOnly .menuGrid{
+    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+    gap:6px !important;
+  }
+
+  .homeOnly .menuItem{
+    min-height:62px !important;
+    padding:6px 8px !important;
+  }
+
+  .homeOnly .menuItem .icon{
+    font-size:1.10rem !important;
+    margin-bottom:1px !important;
+  }
+
+  .homeOnly .menuItem h3{
+    font-size:.70rem !important;
+    line-height:1.08 !important;
+  }
+
+  .homeOnly .menuItem p{
+    display:-webkit-box !important;
+    font-size:.54rem !important;
+    line-height:1.08 !important;
+    -webkit-line-clamp:2 !important;
+  }
+}
+
+/* หน้าทดลอง: ให้ canvas และตารางอ่านได้สม่ำเสมอเมื่อหมุนจอ */
+@media (max-width:900px){
+  canvas{
+    max-width:100%;
+  }
+  .visualizerGrid .mainViz,
+  .visualizerGrid .controlViz,
+  .card,
+  .card.wide,
+  .card.side,
+  .card.third,
+  .card.quarter{
+    grid-column:1/-1;
+  }
+}
+
+
+/* v5.15 clean home text */
+.footer{
+  display:none !important;
+}
+.topicByTopicNote{
+  display:none !important;
+}
+
+
+/* v5.16 home one-column layout */
+.homeOnly .menuGrid{
+  grid-template-columns: 1fr !important;
+}
+.homeOnly .menuItem{
+  width: 100%;
+}
+
+/* มือถือและจอเล็ก: ให้เรียงลงมา 1 คอลัมน์ชัดเจน */
+@media (max-width: 900px){
+  .homeOnly .menuGrid{
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+  .homeOnly .menuItem{
+    min-height: 88px !important;
+    padding: 10px 12px !important;
+  }
+  .homeOnly .menuItem .icon{
+    font-size: 1.35rem !important;
+  }
+  .homeOnly .menuItem h3{
+    font-size: .9rem !important;
+    line-height: 1.18 !important;
+    margin-bottom: 4px !important;
+  }
+  .homeOnly .menuItem p{
+    font-size: .72rem !important;
+    line-height: 1.2 !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+  }
+  .homeOnly .homeMenu{
+    height: auto !important;
+    overflow: visible !important;
+  }
+}
+
+
+/* v5.17 visualizer subpages */
+.visualizerMenuPage .visualizerSubGrid{
+  grid-template-columns:1fr !important;
+  gap:10px !important;
+}
+.visualizerMenuPage .vizSubItem{
+  min-height:88px !important;
+  padding:12px 14px !important;
+}
+.visualizerMenuPage .vizSubItem .icon{
+  font-size:1.35rem !important;
+}
+.visualizerMenuPage .vizSubItem h3{
+  font-size:.98rem !important;
+  line-height:1.18 !important;
+}
+.visualizerMenuPage .vizSubItem p{
+  font-size:.78rem !important;
+  line-height:1.25 !important;
+}
+.vizSingleModeLabel{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:8px 12px;
+  margin-bottom:10px;
+  border-radius:14px;
+  background:rgba(99,102,241,.18);
+  border:1px solid rgba(129,140,248,.35);
+  color:#eaf2ff;
+  font-weight:800;
+}
+.visualizerSinglePage .visualizerGrid{
+  grid-template-columns:1fr !important;
+}
+.visualizerSinglePage .mainViz,
+.visualizerSinglePage .controlViz{
+  grid-column:1/-1 !important;
+}
+@media(min-width:900px){
+  .visualizerSinglePage .visualizerGrid{
+    grid-template-columns:2fr 1fr !important;
+  }
+  .visualizerSinglePage .mainViz{
+    grid-column:span 2 !important;
+  }
+  .visualizerSinglePage .controlViz{
+    grid-column:span 1 !important;
+  }
+}
+
+
+
+
+
+
+/* v5.19 visualizer real player bar */
+.visualizerSinglePage .sectionHead .actions{
+  display:none !important;
+}
+.vizPlayerBar{
+  display:grid;
+  grid-template-columns:1fr auto 1fr;
+  align-items:center;
+  gap:10px;
+  margin:14px 0 6px;
+  padding:10px 14px;
+  border-radius:18px;
+  background:linear-gradient(180deg,rgba(8,12,24,.96),rgba(18,25,42,.96));
+  border:1px solid rgba(148,163,184,.18);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06), 0 10px 24px rgba(0,0,0,.18);
+}
+.playerCluster{
+  display:flex;
+  align-items:center;
+}
+.playerLeft{
+  justify-content:flex-start;
+}
+.playerCenter{
+  justify-content:center;
+  gap:12px;
+}
+.playerRight{
+  justify-content:flex-end;
+}
+.playerNow{
+  color:#dbe8ff;
+  font-size:.86rem;
+  font-weight:800;
+  letter-spacing:.02em;
+  opacity:.92;
+}
+.mediaBtn,
+.mediaUtilityBtn{
+  border:0;
+  cursor:pointer;
+  transition:transform .15s ease, filter .15s ease, opacity .15s ease, background .15s ease;
+}
+.mediaBtn:hover,
+.mediaUtilityBtn:hover{
+  transform:translateY(-1px);
+  filter:brightness(1.06);
+}
+.mediaBtn:active,
+.mediaUtilityBtn:active{
+  transform:translateY(0);
+}
+.mediaBtn{
+  width:46px;
+  height:46px;
+  border-radius:999px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  color:#edf4ff;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.07);
+}
+.mediaGhost{
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(148,163,184,.22);
+}
+.mediaPlay{
+  width:58px;
+  height:58px;
+  background:linear-gradient(135deg,#6d7dff,#8b5cf6);
+  color:#fff;
+  box-shadow:0 10px 18px rgba(91,99,255,.25), inset 0 1px 0 rgba(255,255,255,.2);
+}
+.mediaUtilityBtn{
+  min-width:84px;
+  height:40px;
+  border-radius:999px;
+  padding:0 14px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(148,163,184,.22);
+  color:#edf4ff;
+  font-weight:800;
+}
+.mediaIcon{
+  font-size:1.08rem;
+  line-height:1;
+}
+.mediaPlay .mediaIcon{
+  font-size:1.25rem;
+  margin-left:2px;
+}
+.mediaLabel{
+  font-size:.82rem;
+  line-height:1;
+}
+.vizPlayerMeta{
+  margin:0 0 12px;
+}
+.vizPlayerTrack{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:0 6px;
+  color:#b8c8df;
+  font-size:.76rem;
+}
+.trackDot{
+  width:9px;
+  height:9px;
+  border-radius:999px;
+  background:#8b5cf6;
+  box-shadow:0 0 0 4px rgba(139,92,246,.16);
+  flex:0 0 auto;
+}
+.trackLine{
+  height:4px;
+  border-radius:999px;
+  flex:1 1 auto;
+  background:linear-gradient(90deg,#6d7dff 0%, #8b5cf6 52%, rgba(255,255,255,.16) 52%, rgba(255,255,255,.10) 100%);
+}
+.trackTime{
+  flex:0 0 auto;
+  font-weight:700;
+  opacity:.9;
+}
+@media (max-width: 760px){
+  .vizPlayerBar{
+    grid-template-columns:1fr;
+    gap:10px;
+    padding:10px 12px;
+  }
+  .playerLeft,
+  .playerCenter,
+  .playerRight{
+    justify-content:center;
+  }
+  .playerCenter{
+    order:1;
+  }
+  .playerLeft{
+    order:0;
+  }
+  .playerRight{
+    order:2;
+  }
+  .playerNow{
+    font-size:.8rem;
+  }
+  .mediaBtn{
+    width:42px;
+    height:42px;
+  }
+  .mediaPlay{
+    width:54px;
+    height:54px;
+  }
+  .mediaUtilityBtn{
+    min-width:88px;
+    height:38px;
+  }
+  .vizPlayerTrack{
+    padding:0 2px;
+    font-size:.72rem;
+  }
+}
+
+
+/* v5.19.2 final player styling matching actual HTML */
+.visualizerSinglePage .sectionHead .actions{
+  display:none !important;
+}
+.visualizerSinglePage .vizPlayerBar{
+  display:grid;
+  grid-template-columns:1fr;
+  align-items:center;
+  gap:10px;
+  margin:14px 0 4px;
+  padding:12px 14px;
+  border-radius:18px;
+  background:linear-gradient(180deg,rgba(8,12,24,.96),rgba(18,25,42,.96));
+  border:1px solid rgba(148,163,184,.18);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06), 0 10px 24px rgba(0,0,0,.18);
+}
+.visualizerSinglePage .playerLeft{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+.visualizerSinglePage .playerCenter{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:12px;
+  flex-wrap:wrap;
+}
+.visualizerSinglePage .playerNow{
+  color:#dbe8ff;
+  font-size:.86rem;
+  font-weight:800;
+  letter-spacing:.02em;
+  opacity:.92;
+}
+.visualizerSinglePage .playerBtn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  min-width:78px;
+  height:42px;
+  padding:0 14px;
+  border-radius:999px;
+  border:1px solid rgba(148,163,184,.22);
+  background:rgba(255,255,255,.08);
+  color:#edf4ff;
+  font-weight:800;
+  cursor:pointer;
+  transition:transform .15s ease, filter .15s ease, opacity .15s ease, background .15s ease;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+}
+.visualizerSinglePage .playerBtn:hover{
+  transform:translateY(-1px);
+  filter:brightness(1.06);
+  background:rgba(255,255,255,.11);
+}
+.visualizerSinglePage .playerBtn:active{
+  transform:translateY(0);
+}
+.visualizerSinglePage .playerPrimary{
+  min-width:92px;
+  height:52px;
+  background:linear-gradient(135deg,#6d7dff,#8b5cf6);
+  border-color:transparent;
+  color:#fff;
+  box-shadow:0 10px 18px rgba(91,99,255,.25), inset 0 1px 0 rgba(255,255,255,.2);
+}
+.visualizerSinglePage .playerExportBtn{
+  background:rgba(255,255,255,.06);
+}
+.visualizerSinglePage .playerIcon{
+  font-size:1.02rem;
+  line-height:1;
+}
+.visualizerSinglePage .playerPrimary .playerIcon{
+  font-size:1.18rem;
+  margin-left:2px;
+}
+.visualizerSinglePage .playerText{
+  font-size:.82rem;
+  line-height:1;
+}
+.visualizerSinglePage .vizPlayerMeta{
+  margin:0 0 12px;
+}
+.visualizerSinglePage .vizPlayerTrack{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:0 6px;
+  color:#b8c8df;
+  font-size:.76rem;
+}
+.visualizerSinglePage .trackDot{
+  width:9px;
+  height:9px;
+  border-radius:999px;
+  background:#8b5cf6;
+  box-shadow:0 0 0 4px rgba(139,92,246,.16);
+  flex:0 0 auto;
+}
+.visualizerSinglePage .trackLine{
+  height:4px;
+  border-radius:999px;
+  flex:1 1 auto;
+  background:linear-gradient(90deg,#6d7dff 0%, #8b5cf6 52%, rgba(255,255,255,.16) 52%, rgba(255,255,255,.10) 100%);
+}
+.visualizerSinglePage .trackTime{
+  flex:0 0 auto;
+  font-weight:700;
+  opacity:.9;
+}
+@media (max-width:760px){
+  .visualizerSinglePage .vizPlayerBar{
+    padding:10px 12px;
+  }
+  .visualizerSinglePage .playerCenter{
+    gap:8px;
+  }
+  .visualizerSinglePage .playerBtn{
+    min-width:70px;
+    height:40px;
+    padding:0 10px;
+  }
+  .visualizerSinglePage .playerPrimary{
+    min-width:84px;
+    height:48px;
+  }
+  .visualizerSinglePage .playerText{
+    font-size:.76rem;
+  }
+  .visualizerSinglePage .vizPlayerTrack{
+    padding:0 2px;
+    font-size:.72rem;
+  }
+}
+
+
+/* v5.20 visualizer icon-only player */
+.visualizerSinglePage .playerBtn{
+  min-width:46px !important;
+  width:46px;
+  height:46px;
+  padding:0 !important;
+  gap:0 !important;
+}
+.visualizerSinglePage .playerPrimary{
+  min-width:58px !important;
+  width:58px;
+  height:58px;
+}
+.visualizerSinglePage .playerExportBtn{
+  min-width:46px !important;
+  width:46px;
+  height:46px;
+  padding:0 !important;
+}
+.visualizerSinglePage .playerText,
+.visualizerSinglePage .mediaLabel{
+  display:none !important;
+}
+.visualizerSinglePage .playerIcon{
+  font-size:1.15rem !important;
+}
+.visualizerSinglePage .playerPrimary .playerIcon{
+  font-size:1.28rem !important;
+}
+@media (max-width:760px){
+  .visualizerSinglePage .playerBtn{
+    min-width:42px !important;
+    width:42px;
+    height:42px;
+  }
+  .visualizerSinglePage .playerPrimary{
+    min-width:52px !important;
+    width:52px;
+    height:52px;
+  }
+  .visualizerSinglePage .playerExportBtn{
+    min-width:42px !important;
+    width:42px;
+    height:42px;
+  }
+}
+
+
+/* v5.21 visualizer portrait-landscape optimized */
+.visualizerSinglePage .sectionHead{
+  margin-bottom: 10px;
+}
+.visualizerSinglePage .visualizerGrid{
+  gap: 12px;
+}
+.visualizerSinglePage .mainViz canvas{
+  display: block;
+  width: 100%;
+  border-radius: 14px;
+}
+.visualizerSinglePage .vizReadout{
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 8px !important;
+}
+.visualizerSinglePage .controlViz .formGrid,
+.visualizerSinglePage .controlViz .readouts,
+.visualizerSinglePage .controlViz .vizReadout{
+  gap: 8px !important;
+}
+.visualizerSinglePage .controlViz .field label{
+  font-size: .82rem;
+}
+.visualizerSinglePage .controlViz .field input,
+.visualizerSinglePage .controlViz .field select{
+  min-height: 40px;
+}
+.visualizerSinglePage .vizPlayerBar{
+  margin-top: 10px;
+}
+.visualizerSinglePage .vizPlayerMeta{
+  margin-bottom: 10px;
+}
+
+/* มือถือแนวตั้ง: เรียงลงมาเป็นขั้นตอน */
+@media (max-width: 760px) and (orientation: portrait){
+  .visualizerSinglePage .detailNav{
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
+  .visualizerSinglePage main.wrap{
+    padding-top: 6px;
+  }
+  .visualizerSinglePage .visualizerGrid{
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+  .visualizerSinglePage .mainViz,
+  .visualizerSinglePage .controlViz{
+    grid-column: 1 / -1 !important;
+  }
+  .visualizerSinglePage .mainViz canvas{
+    min-height: 220px;
+    max-height: 320px;
+  }
+  .visualizerSinglePage .vizReadout{
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+  .visualizerSinglePage .controlViz .formGrid{
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+/* มือถือแนวนอน: ขยายพื้นที่ภาพจำลอง และวางค่าควบคุมแยกด้านขวา */
+@media (max-width: 950px) and (orientation: landscape){
+  .visualizerSinglePage .detailNav{
+    padding-top: 6px;
+    padding-bottom: 6px;
+  }
+  .visualizerSinglePage .brand img{
+    width: 34px;
+    height: 34px;
+  }
+  .visualizerSinglePage .brand span{
+    font-size: .92rem;
+    line-height: 1.18;
+  }
+  .visualizerSinglePage main.wrap{
+    padding-top: 4px;
+  }
+  .visualizerSinglePage .section{
+    padding-top: 8px;
+  }
+  .visualizerSinglePage .visualizerGrid{
+    grid-template-columns: minmax(0, 1.45fr) minmax(260px, 0.95fr) !important;
+    gap: 10px !important;
+    align-items: start;
+  }
+  .visualizerSinglePage .mainViz{
+    grid-column: 1 !important;
+  }
+  .visualizerSinglePage .controlViz{
+    grid-column: 2 !important;
+  }
+  .visualizerSinglePage .mainViz canvas{
+    min-height: 180px;
+    max-height: 235px;
+  }
+  .visualizerSinglePage .vizPlayerBar{
+    padding: 8px 10px !important;
+    margin-top: 8px;
+    margin-bottom: 2px;
+  }
+  .visualizerSinglePage .vizPlayerTrack{
+    gap: 8px;
+  }
+  .visualizerSinglePage .vizReadout{
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 7px !important;
+  }
+  .visualizerSinglePage .controlViz .formGrid{
+    grid-template-columns: 1fr !important;
+  }
+  .visualizerSinglePage .controlViz .field label{
+    font-size: .76rem;
+  }
+  .visualizerSinglePage .controlViz .field input,
+  .visualizerSinglePage .controlViz .field select{
+    min-height: 36px;
+    font-size: .85rem;
+  }
+}
+
+/* จอกว้างขึ้นอีกนิดบนแท็บเล็ตแนวนอน */
+@media (min-width: 951px){
+  .visualizerSinglePage .visualizerGrid{
+    grid-template-columns: minmax(0, 1.45fr) minmax(300px, 0.95fr) !important;
+    align-items: start;
+  }
+  .visualizerSinglePage .mainViz{
+    grid-column: 1 !important;
+  }
+  .visualizerSinglePage .controlViz{
+    grid-column: 2 !important;
+  }
 }
